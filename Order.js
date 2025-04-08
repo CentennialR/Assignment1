@@ -1,8 +1,12 @@
 export class Order {
   constructor(sFrom) {
       this.menu = {
-          pizza: { sizes: ["small", "medium", "large"], toppings: ["pepperoni", "mushrooms"] },
-          burger: { sizes: ["single", "double"], extras: ["bacon", "lettuce"] }
+          pizza: { sizes: ["small", "medium", "large"],
+                 extras: ["pepperoni", "mushrooms"]
+                },
+          burger: { sizes: ["single", "double"], 
+                extras: ["bacon", "lettuce"] 
+            }
       };
       this.upSell = ["soda", "fries"];
       this.order = { item: null, size: null, extra: null, drink: null };
@@ -10,7 +14,7 @@ export class Order {
       this.OrderState = {
           WELCOMING: () => {
               this.stateCur = this.OrderState.CHOOSE_ITEM;
-              return ["Welcome to Zim's Ideal Takeout.", "What would you like to order? (Pizza or Burger)"];
+              return ["Welcome to Zim's Ideal Takeout!", "What would you like to order?", "Options: Pizza (small, medium, large) or Burger (single, double)", "Extras: Pizza(pepperoni,mushrooms) or Burger(bacon, lettuce)"];
           },
           CHOOSE_ITEM: (sInput) => {
               let aReturn = [];
@@ -39,11 +43,11 @@ export class Order {
               if (this.menu[this.order.item].toppings || this.menu[this.order.item].extras) {
                   this.order.extra = sInput.toLowerCase();
               }
-              this.stateCur = this.OrderState.upSell;
+              this.stateCur = this.OrderState.UPSELL;
               aReturn.push("Would you like to add a drink or fries?");
               return aReturn;
           },
-          this.upSell: (sInput) => {
+          upSell: (sInput) => { 
               let aReturn = [];
               if (this.upSell.includes(sInput.toLowerCase())) {
                   this.order.drink = sInput.toLowerCase();
