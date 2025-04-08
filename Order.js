@@ -2,7 +2,7 @@ export class Order {
   constructor(sFrom) {
       this.menu = {
           pizza: { sizes: ["small", "medium", "large"],
-                 extras: ["pepperoni", "mushrooms"]
+                 toppings: ["pepperoni", "mushrooms"]
                 },
           burger: { sizes: ["single", "double"], 
                 extras: ["bacon", "lettuce"] 
@@ -14,7 +14,7 @@ export class Order {
       this.OrderState = {
           WELCOMING: () => {
               this.stateCur = this.OrderState.CHOOSE_ITEM;
-              return ["Welcome to Zim's Ideal Takeout!", "What would you like to order?", "Options: Pizza (small, medium, large) or Burger (single, double)", "Extras: Pizza(pepperoni,mushrooms) or Burger(bacon, lettuce)"];
+              return ["Welcome to Zim's Ideal Takeout!", "What would you like to order?", "Options: Pizza (small, medium, large) or Burger (single, double)", "Toppings: Pizza(pepperoni,mushrooms)","Extras: Burger(bacon, lettuce)"];
           },
           CHOOSE_ITEM: (sInput) => {
               let aReturn = [];
@@ -39,24 +39,25 @@ export class Order {
               return aReturn;
           },
           CHOOSE_EXTRA: (sInput) => {
-              let aReturn = [];
-              if (this.menu[this.order.item].toppings || this.menu[this.order.item].extras) {
-                  this.order.extra = sInput.toLowerCase();
-              }
-              this.stateCur = this.OrderState.UPSELL;
-              aReturn.push("Would you like to add a drink or fries?");
-              return aReturn;
+            let aReturn = [];
+            if (this.menu[this.order.item].extras?.includes(sInput.toLowerCase()) ||
+                this.menu[this.order.item].toppings?.includes(sInput.toLowerCase())) {
+              this.order.extra = sInput.toLowerCase();
+            }
+            this.stateCur = this.OrderState.UPSELL;
+            aReturn.push("Would you like to add a drink or fries?");
+            return aReturn;
           },
-          upSell: (sInput) => { 
-              let aReturn = [];
-              if (this.upSell.includes(sInput.toLowerCase())) {
-                  this.order.drink = sInput.toLowerCase();
-              }
-              this.stateCur = this.OrderState.CONFIRM;
-              aReturn.push(`Your order: ${this.order.size} ${this.order.item} with ${this.order.extra}.`);
-              aReturn.push("Thank you for ordering!");
-              this.isDone = true;
-              return aReturn;
+          UPSELL: (sInput) => {
+            let aReturn = [];
+            if (this.upSell.includes(sInput.toLowerCase())) {
+              this.order.drink = sInput.toLowerCase();
+            }
+            this.stateCur = this.OrderState.CONFIRM;
+            aReturn.push(`Your order: ${this.order.size} ${this.order.item} with ${this.order.extra}${this.order.drink ? ' and ' + this.order.drink : ''}.`);
+            aReturn.push("Thank you for ordering!");
+            this.isDone = true;
+            return aReturn;
           }
       };
 
@@ -69,7 +70,7 @@ export class Order {
       return this.stateCur(sInput);
   }
 
-  isDone() {
+  get isOrderDone() {
       return this.isDone;
   }
 }
