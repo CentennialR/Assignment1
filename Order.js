@@ -32,7 +32,7 @@ export class Order {
               if (this.menu[this.order.item].sizes.includes(sInput.toLowerCase())) {
                   this.order.size = sInput.toLowerCase();
                   this.stateCur = this.OrderState.CHOOSE_EXTRA;
-                  aReturn.push(`What extra would you like for your ${this.order.item}?`);
+                  aReturn.push(`What extra/toppings would you like for your ${this.order.item}?`);
               } else {
                   aReturn.push("Please choose a valid size.");
               }
